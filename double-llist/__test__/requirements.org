@@ -1,0 +1,34 @@
+
+* Double Linked List Class Requirements
+
+** Accessors
+   + [X] size() const;
+     - returns the number of items in the list. (O(1))
+   + [X] empty() const;
+     - returns boolean. (O(1))
+   + [X] front() const;
+     - retrieves object stored in head pointer
+     - throws ~underflow~ if list is empty. (O(1))
+   + [X] back() const;
+     - similar to ~front()~ but with tail
+   + [X] *head() const;
+     - returns head pointer. (O(1))
+   + [X] *tail() const;
+     - returns tail pointer. (O(1))
+   + [X] count( T const & ) const;
+     - returns number of nodes in list that equal value in argument. (O(n)) 
+
+** Mutators
+   + [X] void swap( List & );
+     - swap ?
+   + [X] List& operator=( List &);
+     - assignment operator make a copy of the argument and then swaps the member variable of this list with those of the copy.
+   + [X] void push_front( T const & );
+   + [X] void push_back( T const & );
+   + [X] T pop_front();
+     - throw underflow exception if list is empty
+   + [X] T pop_back();
+     - throw underflow exception if list is empty
+   + [X] int erase( T const &);
+     - delete first node (from front) that matches
+     - return number of nodes deleted (0 or 1)

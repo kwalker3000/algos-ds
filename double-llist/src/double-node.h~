@@ -1,0 +1,68 @@
+
+#ifndef _doubleNode_h
+#define _doubleNode_h
+
+template <class T>
+class DoubleNode {
+
+public:
+    // <T> not required in constructor
+    DoubleNode();
+    DoubleNode(T const data);
+    DoubleNode(T const data, DoubleNode<T>* prev, DoubleNode<T>* next);
+
+    T get() const;
+    DoubleNode<T>* getNext() const;
+    DoubleNode<T>* getPrev() const;
+
+private:
+    DoubleNode<T> *next, *prev;
+    T data;
+
+};
+
+template <class T>
+DoubleNode<T>::DoubleNode()
+{
+    prev = nullptr;
+    next = nullptr;
+
+    // this could be are head or tail pointer??
+}
+
+template <class T> // must go before each method
+DoubleNode<T>::DoubleNode(T const data)
+{
+    this.data = data;
+    this->prev = nullptr;
+    this->next = nullptr;
+}
+
+template <class T>
+DoubleNode<T>::DoubleNode(T const data, DoubleNode<T>* prev, DoubleNode<T>* next)
+{
+    this->data = data;
+    this->prev = prev;
+    this->next = next;
+}
+
+template <class T>
+T DoubleNode<T>::get() const
+{
+    return data;
+}
+
+template <class T>
+DoubleNode<T>* DoubleNode<T>::getNext() const
+{
+    return next;
+}
+
+#endif
+
+
+// struct node {
+//     int value;
+//     node* next;
+//     node* prev;
+// }
