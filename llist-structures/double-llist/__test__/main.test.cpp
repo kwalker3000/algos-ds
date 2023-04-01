@@ -1,17 +1,17 @@
 
 #include <stdexcept>
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../../doctest.hpp"
+#include "../../../doctest.hpp"
 #include <iostream>
 #include <string>
 
 
 // tested source
-#include "../src/double-node.hpp"
-#include "../src/llist.hpp"
+#include "../src/double_node.hpp"
+#include "../src/double_list.hpp"
 
 
-TEST_CASE("Test DoubleNode .get() accessor method")
+TEST_CASE("Test Double_node .get() accessor method")
 {
 
     std::string const SOME_STRING = "hello world";
@@ -21,9 +21,9 @@ TEST_CASE("Test DoubleNode .get() accessor method")
         std::string two = "world";
     } TUPLE;
 
-    DoubleNode<int> nodeWithIntData(SOME_INT);
-    DoubleNode<std::string> nodeWithStringData(SOME_STRING);
-    DoubleNode<SOME_STRUCT> nodeWithStructData(TUPLE);
+    Double_node<int> nodeWithIntData(SOME_INT);
+    Double_node<std::string> nodeWithStringData(SOME_STRING);
+    Double_node<SOME_STRUCT> nodeWithStructData(TUPLE);
 
     CHECK(nodeWithIntData.get() == SOME_INT);
     CHECK(nodeWithStringData.get() == SOME_STRING);
@@ -34,7 +34,7 @@ TEST_CASE("Test DoubleNode .get() accessor method")
 
 TEST_CASE(".push_front")
 {
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
     CHECK(llist.size() == 0);
     CHECK(llist.empty() == true);
 
@@ -55,7 +55,7 @@ TEST_CASE(".push_front")
 
 TEST_CASE(".push_back")
 {
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
     CHECK(llist.size() == 0);
     CHECK(llist.empty() == true);
 
@@ -76,14 +76,12 @@ TEST_CASE(".push_back")
 
 TEST_CASE(".erase")
 {
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
 
     // Removing from front w/ one node
     llist.push_front("d");
     llist.erase("d");
     CHECK(llist.empty() == true);
-    // CHECK_THROWS_WITH(llist.erase("X"), "Your list is empty");
-    // CHECK_THROWS_AS(llist.erase("X"), std::invalid_argument);
     CHECK_EQ(llist.erase("X"), 0);
 
 
@@ -105,31 +103,10 @@ TEST_CASE(".erase")
 
 }
 
-// the client should not need to implement a traversal
-// this is done while implementing functions, it is not a feature of a link list
-
-TEST_CASE("traversing nodes")
-{
-
-    LinkList<std::string> llist;
-
-    llist.push_front("c");
-    llist.push_front("b");
-    llist.push_front("a");
-
-    // Foward traversal chain
-    CHECK(llist.front() == "a");
-
-
-    // Backward traversal chain
-    // CHECK(llist.back()->get() == "c");
-    // CHECK(llist.back()->m_prev->get() == "b");
-    // CHECK(llist.back()->m_prev->m_prev->get() == "a");
-}
 
 TEST_CASE(".contains")
 {
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
 
     llist.push_front("c");
     llist.push_front("b");
@@ -157,7 +134,7 @@ TEST_CASE(".contains")
 TEST_CASE(".count")
 {
 
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
 
     llist.erase("x");
 
@@ -176,7 +153,7 @@ TEST_CASE(".count")
 TEST_CASE(".pop_front and .pop_back")
 {
 
-    LinkList<std::string> llist;
+    Double_list<std::string> llist;
 
     llist.push_front("c");
     llist.push_front("b");
@@ -201,8 +178,8 @@ TEST_CASE(".pop_front and .pop_back")
 TEST_CASE(".swap")
 {
 
-    LinkList<std::string> list1;
-    LinkList<std::string> list2;
+    Double_list<std::string> list1;
+    Double_list<std::string> list2;
 
     list1.push_front("c");
     list1.push_front("b");
@@ -211,6 +188,9 @@ TEST_CASE(".swap")
     list2.push_front("z");
     list2.push_front("y");
     list2.push_front("x");
+
+    CHECK_EQ(list1.front(), "a");
+    CHECK_EQ(list2.front(), "x");
 
     list1.swap(list2);
 

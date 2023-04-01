@@ -1,45 +1,40 @@
 
-#ifndef _llist_h
-#define _llist_h
+#ifndef _Double_list_h
+#define _Double_list_h
 
 #include <iostream>
 #include <stdexcept>
 
 // With nested node class
 
-template <typename T> class LinkList {
+template <typename T> class Double_list {
 
 private:
 
-    class DoubleNode {
+    class Double_node {
 
     public:
-        DoubleNode();
-        // DoubleNode(Tnode const data); // will cause ambiguity with other constructor
-        // below
-        DoubleNode(T const data, DoubleNode *prevNode = nullptr,
-                   DoubleNode *nextNode = nullptr);
+        Double_node();
+        Double_node(T const&, Double_node *prevNode = nullptr,
+                    Double_node *nextNode = nullptr);
 
         T get() const;
-        DoubleNode *next() const;
-        DoubleNode *prev() const;
+        Double_node *next() const;
+        Double_node *prev() const;
 
-        DoubleNode *m_next, *m_prev;
+        Double_node *m_next, *m_prev;
 
     private:
         T m_data;
     };
 
-    DoubleNode *m_head;
-    DoubleNode *m_tail;
+    Double_node *m_head;
+    Double_node *m_tail;
     int m_size = 0;
 
 public:
-    // initialize with empty constructor
-    // set pointers to null, also no need for data, we are initializing a head and
-    // tail only
-    LinkList();
-    ~LinkList();
+    Double_list();
+    ~Double_list();
 
     int size() const;
     int count(T const&) const;
@@ -54,26 +49,28 @@ public:
 
     void push_front(T const data);
     void push_back(T const data);
-    void swap(LinkList<T> &);
+    void swap(Double_list<T> &);
 
-    DoubleNode* begin() const;
-    DoubleNode* end() const;
-    DoubleNode* rbegin() const;
-    DoubleNode* rend() const;
+    Double_node* begin() const;
+    Double_node* end() const;
+    Double_node* rbegin() const;
+    Double_node* rend() const;
 
-    DoubleNode* head() const;
-    DoubleNode* tail() const;
+    Double_node* head() const;
+    Double_node* tail() const;
+
+    Double_list& operator=(Double_list const&);
 
     template <typename S>
-    friend std::ostream &operator<<(std::ostream&, LinkList<S> const&);
+    friend std::ostream &operator<<(std::ostream&, Double_list<S> const&);
 
 };
 
-template <typename T> LinkList<T>::LinkList() {}
+template <typename T> Double_list<T>::Double_list() {}
 
-template <typename T> LinkList<T>::~LinkList()
+template <typename T> Double_list<T>::~Double_list()
 {
-    DoubleNode *node = m_head;
+    Double_node *node = m_head;
     while (m_head != nullptr) {
         m_head = node->next();
         delete node;
@@ -81,74 +78,74 @@ template <typename T> LinkList<T>::~LinkList()
     }
 }
 
-template <typename T> int LinkList<T>::size() const
+template <typename T> int Double_list<T>::size() const
 {
     return m_size;
 }
 
-template <typename T> bool LinkList<T>::empty() const
+template <typename T> bool Double_list<T>::empty() const
 {
     return m_size == 0;
 }
 
-template <typename T> T LinkList<T>::front() const
+template <typename T> T Double_list<T>::front() const
 {
     if (empty())
         throw std::invalid_argument("Can't access an empty list!");
-    return m_head->get();
+    return head()->get();
 }
 
-template <typename T> T LinkList<T>::back() const
+template <typename T> T Double_list<T>::back() const
 {
     if (empty())
         throw std::invalid_argument("Can't access an empty list!");
     if (m_size == 1)
         return front();
-    return m_tail->get();
+    return tail()->get();
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::begin() const
+typename Double_list<T>::Double_node* Double_list<T>::begin() const
 {
     return m_head;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::end() const
+typename Double_list<T>::Double_node* Double_list<T>::end() const
 {
     return m_tail;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::rend() const
+typename Double_list<T>::Double_node* Double_list<T>::rend() const
 {
     return m_head;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::rbegin() const
+typename Double_list<T>::Double_node* Double_list<T>::rbegin() const
 {
     return m_tail;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::head() const
+typename Double_list<T>::Double_node* Double_list<T>::head() const
 {
     return m_head;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::tail() const
+typename Double_list<T>::Double_node* Double_list<T>::tail() const
 {
     return m_tail;
 }
 // does not prevent duplicates
 template <typename T>
-void LinkList<T>::push_front(
+void Double_list<T>::push_front(
     T const data)
 {
     // prev and next are set to null
-    DoubleNode *node = new DoubleNode(data);
+    Double_node *node = new Double_node(data);
 
     if (empty()) {
         m_head = node;
@@ -163,13 +160,13 @@ void LinkList<T>::push_front(
     ++m_size;
 }
 
-template <typename T> void LinkList<T>::push_back(T const data)
+template <typename T> void Double_list<T>::push_back(T const data)
 {
 
     if (empty()) {
         return push_front(data);
     }
-    DoubleNode *node = new DoubleNode(data);
+    Double_node *node = new Double_node(data);
 
     node->m_prev = m_tail;
     m_tail->m_next = node;
@@ -178,20 +175,28 @@ template <typename T> void LinkList<T>::push_back(T const data)
 }
 
 template <typename T>
-void LinkList<T>::swap(LinkList<T> &list)
+void Double_list<T>::swap(Double_list<T> &list)
 {
     std::swap(m_head, list.m_head);
     std::swap(m_tail, list.m_tail);
     std::swap(m_size, list.m_size);
 }
 
-template <typename T> bool LinkList<T>::contains(T const data) const
+template <typename T>
+Double_list<T>& Double_list<T>::operator=(Double_list<T> const& rhs)
+{
+    Double_list<T> copy(rhs);
+    swap(copy);
+    return *this;
+}
+
+template <typename T> bool Double_list<T>::contains(T const data) const
 {
 
     if (empty())
         return false;
 
-    DoubleNode *curr = m_head;
+    Double_node *curr = m_head;
     while (curr != nullptr) {
 
         if (curr->get() == data) {
@@ -203,10 +208,10 @@ template <typename T> bool LinkList<T>::contains(T const data) const
 }
 
 template <typename T>
-T LinkList<T>::pop_front()
+T Double_list<T>::pop_front()
 {
     T node = front();
-    DoubleNode* temp = m_head->next();
+    Double_node* temp = m_head->next();
     delete m_head;
     m_head = temp;
     --m_size;
@@ -214,12 +219,12 @@ T LinkList<T>::pop_front()
 }
 
 template <typename T>
-T LinkList<T>::pop_back()
+T Double_list<T>::pop_back()
 {
     if (size() == 1) return pop_front();
 
     T node = back();
-    DoubleNode* temp = m_tail->prev();
+    Double_node* temp = m_tail->prev();
     delete m_tail;
     m_tail = temp;
     m_tail->m_next = nullptr;
@@ -227,7 +232,7 @@ T LinkList<T>::pop_back()
     return node;
 }
 
-template <typename T> int LinkList<T>::erase(T const data)
+template <typename T> int Double_list<T>::erase(T const data)
 {
 
     if (empty()) return 0;
@@ -237,19 +242,8 @@ template <typename T> int LinkList<T>::erase(T const data)
         return 1;
     }
 
-    // TODO
-    // suppose to linear search from front, exposing back may cause will cause unwanted results
-    else if (back() == data) {
-        DoubleNode* temp = m_tail->prev();
-        delete m_tail;
-        m_tail = temp;
-        m_tail->m_next = nullptr;
-        --m_size;
-        return 1;
-    }
-
     else {
-        DoubleNode *curr = m_head;
+        Double_node *curr = m_head;
         while (curr) {
             if (curr->get() == data) {
                 if (curr->next() == nullptr) {
@@ -263,7 +257,6 @@ template <typename T> int LinkList<T>::erase(T const data)
                     curr->next()->m_prev = curr->prev();
                     curr->prev()->m_next = curr->next();
                     delete curr;
-
                 }
                 --m_size;
                 return 1;
@@ -275,13 +268,13 @@ template <typename T> int LinkList<T>::erase(T const data)
 }
 
 template <typename T>
-int LinkList<T>::count(T const& value) const
+int Double_list<T>::count(T const& value) const
 {
 
     int count = 0;
     if (empty()) return 0;
 
-    DoubleNode* curr = m_head;
+    Double_node* curr = m_head;
     while (curr) {
         if (curr->get() == value) ++count;
         curr = curr->next();
@@ -289,24 +282,15 @@ int LinkList<T>::count(T const& value) const
     return count;
 }
 template <typename T>
-LinkList<T>::DoubleNode::DoubleNode()
+Double_list<T>::Double_node::Double_node()
 {
     m_prev = nullptr;
     m_next = nullptr;
 }
 
-// template <typename Tnode> // must go before each method
-// DoubleNode<Tnode>::DoubleNode(T const data)
-// {
-//     this->data = data;
-//     this->prev = nullptr;
-//     this->next = nullptr;
-// }
-
-// more functional style as only used passed in arguments
 template <typename T>
-LinkList<T>::DoubleNode::DoubleNode(T const data, DoubleNode *prevNode,
-                                    DoubleNode *nextNode)
+Double_list<T>::Double_node::Double_node(T const& data, Double_node *prevNode,
+        Double_node *nextNode)
 {
     m_data = data;
     m_prev = prevNode;
@@ -314,29 +298,29 @@ LinkList<T>::DoubleNode::DoubleNode(T const data, DoubleNode *prevNode,
 }
 
 template <typename T>
-T LinkList<T>::DoubleNode::get() const
+T Double_list<T>::Double_node::get() const
 {
     return m_data;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::DoubleNode::next() const
+typename Double_list<T>::Double_node* Double_list<T>::Double_node::next() const
 {
     return m_next;
 }
 
 template <typename T>
-typename LinkList<T>::DoubleNode* LinkList<T>::DoubleNode::prev() const
+typename Double_list<T>::Double_node* Double_list<T>::Double_node::prev() const
 {
     return m_prev;
 }
 
 template <typename S>
-std::ostream &operator<<(std::ostream& os, LinkList<S> const& list)
+std::ostream &operator<<(std::ostream& os, Double_list<S> const& list)
 {
     os << "head";
 
-    for (typename LinkList<S>::DoubleNode* ptr = list.begin(); ptr != nullptr; ptr = ptr->next()) {
+    for (typename Double_list<S>::Double_node* ptr = list.begin(); ptr != nullptr; ptr = ptr->next()) {
         os << " -> " << ptr->get();
     }
     os << " tail" << std::endl;

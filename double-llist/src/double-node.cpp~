@@ -1,7 +1,0 @@
-
-#include "double-node.h"
-
-DoubleNode::DoubleNode(const T data)
-{
-
-}
