@@ -34,6 +34,7 @@ private:
 
 public:
     Double_list();
+    Double_list(Double_list<T> const&);
     ~Double_list();
 
     int size() const;
@@ -67,6 +68,19 @@ public:
 };
 
 template <typename T> Double_list<T>::Double_list() {}
+
+template <typename Type>
+Double_list<Type>::Double_list( Double_list<Type> const &list ):
+    m_head( nullptr ),
+    m_tail( nullptr ),
+    m_size( 0 )
+{
+    Double_node* node = list.head();
+    while (node != nullptr) {
+        push_back(node->get());
+        node = node->next();
+    }
+}
 
 template <typename T> Double_list<T>::~Double_list()
 {

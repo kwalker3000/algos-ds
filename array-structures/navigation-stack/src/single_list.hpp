@@ -1,0 +1,241 @@
+
+#ifndef _Single_list_h
+#define _Single_list_h
+
+#include <iostream>
+#include <stdexcept>
+
+template <typename T> class Single_list {
+
+private:
+
+    class Single_node {
+
+    public:
+        Single_node();
+        Single_node(T const&, Single_node*);
+
+        T get() const;
+        Single_node *next() const;
+
+        Single_node *m_next;
+
+    private:
+        T m_data;
+    };
+
+    Single_node *m_head;
+    int m_size = 0;
+
+public:
+    Single_list();
+    ~Single_list();
+
+    int size() const;
+    int count(T const&) const;
+    int erase(T const&);
+
+    bool empty() const;
+    T front() const;
+    T pop_front();
+
+    Single_node *head() const;
+
+    void swap(Single_list&);
+    void insert(T const&);
+
+    Single_list& operator=(Single_list const&);
+
+    template <typename S>
+    friend std::ostream &operator<<(std::ostream&, Single_list<S> const&);
+
+};
+
+template <typename T>
+Single_list<T>::Single_list() {}
+
+template <typename T>
+Single_list<T>::~Single_list()
+{
+
+    Single_node *temp = m_head;
+
+    while (temp != nullptr) {
+        temp = temp->next();
+        delete m_head;
+        m_head = temp;
+    }
+}
+
+template <typename T>
+int Single_list<T>::size() const
+{
+    return m_size;
+}
+
+template <typename T>
+int Single_list<T>::count(T const& value) const
+{
+    int count = 0;
+
+    Single_node *node = m_head;
+    while (node != nullptr) {
+        if (node->get() == value) count++;
+        node = node->next();
+    }
+    return count;
+}
+
+template <typename T>
+int Single_list<T>::erase(T const& value)
+{
+
+    if (size() == 0) return 0;
+
+    if (front() == value) {
+        Single_node *node = m_head->next();
+        delete m_head;
+        m_head = node;
+        m_size--;
+        return 1;
+    }
+    else {
+        Single_node *prev = m_head;
+        Single_node *curr = m_head;
+        while (curr != nullptr) {
+            if (curr->get() == value) {
+                prev->m_next = curr->next();
+                delete curr;
+                m_size--;
+                return 1;
+            }
+            else {
+                prev = curr;
+                curr = curr->next();
+            }
+        }
+    }
+    return 0;
+}
+
+template <typename T>
+bool Single_list<T>::empty() const
+{
+    return size() == 0;
+}
+
+template <typename T>
+T Single_list<T>::front() const
+{
+    if (empty())
+        throw std::invalid_argument("Can't access an empty list!");
+    return head()->get();
+}
+
+template <typename T>
+T Single_list<T>::pop_front()
+{
+
+    if (empty()) throw std::invalid_argument("Can't access an empty list!");
+
+    T node = front();
+    Single_node *next = m_head->next();
+    delete m_head;
+    m_head = next;
+    --m_size;
+    return node;
+}
+
+template <typename T>
+typename Single_list<T>::Single_node* Single_list<T>::head() const
+{
+    return m_head;
+}
+
+template <typename T>
+void Single_list<T>::insert(T const& value)
+{
+
+    Single_node *new_node = new Single_node(value, nullptr);
+
+    if (empty()) {
+        m_head = new_node;
+    }
+    else {
+
+        new_node->m_next = head();
+        m_head = new_node;
+    }
+    ++m_size;
+    return;
+
+    // if (value <= head()->get()) {
+    //     new_node->m_next = head();
+    //     m_head = new_node;
+    //     ++m_size;
+    //     return;
+    // }
+
+    // Single_node *curr = m_head;
+    // while (curr->next() != nullptr && value > curr->next()->get()) {
+    //     curr = curr->next();
+    // }
+    // new_node->m_next = curr->next();
+    // curr->m_next = new_node;
+    // ++m_size;
+    // return;
+}
+
+template <typename T>
+void Single_list<T>::swap(Single_list<T> &list)
+{
+    std::swap(m_head, list.m_head);
+    std::swap(m_size, list.m_size);
+}
+
+template <typename T>
+Single_list<T>& Single_list<T>::operator=(Single_list<T> const& rhs)
+{
+    Single_list<T> copy(rhs);
+    swap(copy);
+    return *this;
+}
+
+template <typename T>
+Single_list<T>::Single_node::Single_node()
+{
+    m_next = nullptr;
+}
+
+template <typename T>
+Single_list<T>::Single_node::Single_node(T const& value, Single_node *next)
+{
+    m_data = value;
+    m_next = next;
+}
+
+template <typename T>
+T Single_list<T>::Single_node::get() const
+{
+    return m_data;
+}
+
+template <typename T>
+typename Single_list<T>::Single_node* Single_list<T>::Single_node::next() const
+{
+    return m_next;
+}
+
+template <typename S>
+std::ostream &operator<<( std::ostream &out, Single_list<S> const &list )
+{
+    for (typename Single_list<S>::Single_node *ptr = list.head(); ptr != nullptr; ptr = ptr->next() ) {
+        out << "->" << ptr->get();
+    }
+
+    out << "->0";
+
+    return out;
+}
+
+#endif

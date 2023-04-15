@@ -194,11 +194,42 @@ TEST_CASE(".swap")
 
     list1.swap(list2);
 
+    CHECK_EQ(list1.front(), "x");
+    CHECK_EQ(list2.front(), "a");
+}
+
+TEST_CASE("copy constructor")
+{
+
+    Double_list<std::string> list1;
+
+    list1.push_front("c");
+    list1.push_front("b");
+    list1.push_front("a");
+
+    Double_list<std::string> list2(list1);
+
+    CHECK_EQ(list1.size(), list2.size());
+
     std::cout << "list1" << std::endl;
     std::cout << list1 << std::endl;
     std::cout << "list2" << std::endl;
     std::cout << list2 << std::endl;
 
-    CHECK_EQ(list1.front(), "x");
-    CHECK_EQ(list2.front(), "a");
+    list1.pop_front();
+
+    CHECK(list1.front() != list2.front());
+
+    list2.pop_front();
+
+    CHECK(list1.front() == list2.front());
+
+    list1.push_front("a");
+    CHECK(list1.front() != list2.front());
+
+    std::cout << "\n";
+    std::cout << "list1" << std::endl;
+    std::cout << list1 << std::endl;
+    std::cout << "list2" << std::endl;
+    std::cout << list2 << std::endl;
 }

@@ -1,5 +1,5 @@
 
-* Double Linked List Class Requirements
+* Double List Class Requirements
 
 ** Accessors
    + [X] size() const;

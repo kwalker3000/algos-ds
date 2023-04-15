@@ -1,0 +1,28 @@
+
+* Sorted List Class Requirements
+
+** Accessors
+   + [X] int size() const;
+     - returns the number of items in the list. (O(1))
+   + [X] bool empty() const;
+   + [X] Type front() const;
+     - retrieves the object stored in head pointer
+     - throws ~exception~ if list is empty. (O(1))
+   + [X] Single_node<T> *head() const;
+     - returns head ponter. (O(1))
+   + [X] int count( T const & ) const;
+     - returns number of nodes in list that equal value in argument. (O(n)) 
+
+** Mutators
+   + [X] void swap( List & );
+     - swaps all member variable of list with those of argument. (O(1))
+   + [X] Sorted_list &operator=( Sorted_list & )
+     - assignment operator. (O(m + n))
+   + [X] void insert( T const & );
+     - creates new node and stores and inserts in sorted order. (O(n))
+   + [X] Type pop_front();
+     - remove front node 
+     - throws ~exception~ if list is empty. (O(1))
+   + [X] int erase( T const & );
+     - remove first node (from front) that equals argument
+     - return number of nodes removed (0 or 1). (O(1))

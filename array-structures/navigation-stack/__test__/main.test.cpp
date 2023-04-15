@@ -1,4 +1,5 @@
 
+
 #include <stdexcept>
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../../../doctest.hpp"
@@ -7,11 +8,11 @@
 
 
 // tested source
-#include "../src/sorted_list.hpp"
+#include "../src/single_list.hpp"
 
 TEST_CASE(".insert")
 {
-    Sorted_list<std::string> slist;
+    Single_list<std::string> slist;
     CHECK(slist.size() == 0);
     CHECK(slist.empty() == true);
 
@@ -31,7 +32,7 @@ TEST_CASE(".insert")
 
 TEST_CASE(".erase")
 {
-    Sorted_list<std::string> slist;
+    Single_list<std::string> slist;
 
     // Removing from front w/ one node
     slist.insert("d");
@@ -61,7 +62,7 @@ TEST_CASE(".erase")
 TEST_CASE("list is sorted")
 {
 
-    Sorted_list<char> slist;
+    Single_list<char> slist;
     std::string input = "giadcfebh";
     std::string output = "";
     std::string sorted = "abcdefghi";
@@ -81,7 +82,7 @@ TEST_CASE("list is sorted")
 TEST_CASE(".count")
 {
 
-    Sorted_list<std::string> slist;
+    Single_list<std::string> slist;
 
     CHECK_EQ(slist.erase("x"), 0);
 
@@ -104,7 +105,7 @@ TEST_CASE(".count")
 TEST_CASE(".pop_front")
 {
 
-    Sorted_list<std::string> slist;
+    Single_list<std::string> slist;
 
     slist.insert("a");
     slist.insert("b");
@@ -126,8 +127,8 @@ TEST_CASE(".pop_front")
 TEST_CASE(".swap")
 {
 
-    Sorted_list<std::string> list1;
-    Sorted_list<std::string> list2;
+    Single_list<std::string> list1;
+    Single_list<std::string> list2;
 
     list1.insert("c");
     list1.insert("a");

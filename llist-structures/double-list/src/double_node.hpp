@@ -5,10 +5,7 @@
 template <class Tnode> class Double_node {
 
 public:
-    // <Tnode> not required in constructor
     Double_node();
-    // Double_node(Tnode const data); // will cause ambiguity with other constructor
-    // below
     Double_node(Tnode const data, Double_node<Tnode> *prevNode = nullptr,
                 Double_node<Tnode> *nextNode = nullptr);
 
