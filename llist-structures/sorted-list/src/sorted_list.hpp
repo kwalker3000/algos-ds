@@ -55,10 +55,10 @@ public:
 template <typename T>
 Sorted_list<T>::Sorted_list() {}
 
-template <typename Type>
-Sorted_list<Type>::Sorted_list( Sorted_list<Type> const &list ):
-    m_head( nullptr ),
-    m_size( 0 )
+template <typename T>
+Sorted_list<T>::Sorted_list(Sorted_list<T> const &list):
+    m_head(nullptr),
+    m_size(0)
 {
     Single_node* node = list.head();
     while (node != nullptr) {

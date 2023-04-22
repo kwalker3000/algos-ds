@@ -69,11 +69,11 @@ public:
 
 template <typename T> Double_list<T>::Double_list() {}
 
-template <typename Type>
-Double_list<Type>::Double_list( Double_list<Type> const &list ):
-    m_head( nullptr ),
-    m_tail( nullptr ),
-    m_size( 0 )
+template <typename T>
+Double_list<T>::Double_list(Double_list<T> const &list):
+    m_head(nullptr),
+    m_tail(nullptr),
+    m_size(0)
 {
     Double_node* node = list.head();
     while (node != nullptr) {

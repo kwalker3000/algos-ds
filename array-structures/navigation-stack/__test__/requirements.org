@@ -1,0 +1,22 @@
+
+* Navigation Stack Class Requirements
+
+** Accessors
+   + [X] bool can_undo() const
+     - returns true if the undo stack is not empty (O(1))
+   + [X] bool can_redo() const
+     - returns true if the redo stack is not empty. (O(1))
+
+** Mutators
+   + [X] void swap( Navigation_stack & )
+     - swaps member variables with those of the argument. (0(1))
+   + [X] Navigation_stack &operator=( Navigation_stack & );
+     - assignment operator makes a copy of argument and then swaps member variables with copy
+   + [X] void event( Type const& )
+     - push element onto the top of the undo stack and empty the redo stack. (O(n))
+   + [X] Type undo()
+     - pop the top element of the undo stack, push it onto the redo stack, and return the object. Throw exception if empty. (O(1))
+   + [X] Type redo()
+     - Pop the top element off of the redo stack, push it onto the undo stack, and return the object. Throw exception if empty. (O(1))
+   + [X] void clear()
+     - removes all the elements in both stacks. (O(n))

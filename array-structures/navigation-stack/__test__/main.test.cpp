@@ -8,146 +8,158 @@
 
 
 // tested source
-#include "../src/single_list.hpp"
+#include "../src/navigation_stack.hpp"
 
 TEST_CASE(".insert")
 {
-    Single_list<std::string> slist;
-    CHECK(slist.size() == 0);
-    CHECK(slist.empty() == true);
+    Navigation_stack<std::string> nStack;
 
-    slist.insert("c");
-    CHECK(slist.size() == 1);
-    CHECK(slist.empty() == false);
+    nStack.event("draw circle");
+    nStack.event("draw square");
+    nStack.event("erase square");
+    nStack.event("cut circle");
 
-    slist.insert("b");
-    CHECK(slist.size() == 2);
-    CHECK_EQ(slist.front(), "b");
+    CHECK(nStack.can_undo() == true);
+    CHECK(nStack.can_redo() == false);
+}
 
-    slist.insert("a");
-    CHECK(slist.size() == 3);
-    CHECK(slist.front() == "a");
+TEST_CASE(".undo")
+{
+    Navigation_stack<std::string> nStack;
+
+    nStack.event("draw circle");
+    nStack.event("draw square");
+    nStack.event("erase square");
+    nStack.event("cut circle");
+
+    std::string undoEvent_1 = nStack.undo();
+    CHECK_EQ(undoEvent_1, "cut circle");
+    CHECK(nStack.can_redo() == true);
+    CHECK(nStack.can_undo() == true);
+
+    nStack.undo();
+    nStack.undo();
+    std::string undoEvent_2 = nStack.undo();
+    CHECK_EQ(undoEvent_2, "draw circle");
+    CHECK(nStack.can_redo() == true);
+    CHECK(nStack.can_undo() == false);
+
+    CHECK_THROWS_WITH(nStack.undo(), "Undo stack is empty");
+
+    nStack.event("add circle");
+    CHECK(nStack.can_redo() == false);
+    CHECK(nStack.can_undo() == true);
+}
+
+TEST_CASE(".redo")
+{
+    Navigation_stack<std::string> nStack;
+
+    nStack.event("draw circle");
+    nStack.event("draw square");
+    nStack.event("erase square");
+    nStack.event("cut circle");
+
+    nStack.undo();
+    std::string redoEvent_1 = nStack.redo();
+    CHECK_EQ(redoEvent_1, "cut circle");
+    CHECK(nStack.can_redo() == false);
+    CHECK(nStack.can_undo() == true);
+
+    nStack.undo();
+    nStack.undo();
+    std::string redoEvent_2 = nStack.redo();
+    CHECK_EQ(redoEvent_2, "erase square");
+
+    std::string redoEvent_3 = nStack.redo();
+    CHECK_EQ(redoEvent_3, "cut circle");
+    CHECK(nStack.can_redo() == false);
+    CHECK(nStack.can_undo() == true);
+
+    CHECK_THROWS_WITH(nStack.redo(), "Redo stack is empty");
+
+    nStack.event("add circle");
+    CHECK(nStack.can_redo() == false);
+    CHECK(nStack.can_undo() == true);
 }
 
 
-TEST_CASE(".erase")
+TEST_CASE(".clear")
 {
-    Single_list<std::string> slist;
+    Navigation_stack<std::string> nStack;
 
-    // Removing from front w/ one node
-    slist.insert("d");
-    slist.erase("d");
-    CHECK(slist.empty() == true);
-    CHECK_EQ(slist.erase("X"), 0);
+    nStack.event("draw circle");
+    nStack.event("draw square");
+    nStack.event("erase square");
+    nStack.event("cut circle");
 
+    nStack.undo();
+    nStack.undo();
 
-    // Check that head and tail are reset properly after removal
-    slist.insert("a");
-    CHECK(slist.front() == "a");
+    CHECK(nStack.can_redo() == true);
+    CHECK(nStack.can_undo() == true);
 
-    slist.insert("b");
-    slist.insert("c");
+    nStack.clear();
+    CHECK(nStack.can_redo() == false);
+    CHECK(nStack.can_undo() == false);
 
-    // Removing from middle
-    slist.erase("b");
-    CHECK_EQ(slist.front(), "a");
-    CHECK_EQ(slist.count("c"), 1);
+    nStack.event("draw square");
+    nStack.event("erase square");
 
-    // Erase from back
-    slist.erase("c");
-    CHECK_EQ(slist.front(), "a");
-
-}
-
-TEST_CASE("list is sorted")
-{
-
-    Single_list<char> slist;
-    std::string input = "giadcfebh";
-    std::string output = "";
-    std::string sorted = "abcdefghi";
-
-    for (char c : input) {
-        slist.insert(c);
-    }
-    while (!slist.empty()) {
-
-        output += slist.pop_front();
-    }
-
-    CHECK_EQ(output, sorted);
-}
-
-
-TEST_CASE(".count")
-{
-
-    Single_list<std::string> slist;
-
-    CHECK_EQ(slist.erase("x"), 0);
-
-    slist.insert("a");
-    slist.insert("a");
-    slist.insert("a");
-    slist.insert("c");
-    slist.insert("e");
-    slist.insert("c");
-
-    CHECK_EQ(slist.count("a"), 3);
-    CHECK_EQ(slist.count("x"), 0);
-
-    slist.erase("a");
-    CHECK_EQ(slist.count("a"), 2);
-    CHECK_EQ(slist.count("c"), 2);
-
-}
-
-TEST_CASE(".pop_front")
-{
-
-    Single_list<std::string> slist;
-
-    slist.insert("a");
-    slist.insert("b");
-    slist.insert("c");
-
-    CHECK_EQ(slist.pop_front(), "a");
-    CHECK_EQ(slist.pop_front(), "b");
-    CHECK_EQ(slist.pop_front(), "c");
-
-    slist.insert("c");
-    slist.insert("b");
-    slist.insert("a");
-
-    CHECK_EQ(slist.pop_front(), "a");
-
-    CHECK_EQ(slist.front(), "b");
+    nStack.undo();
+    CHECK(nStack.can_redo() == true);
+    CHECK(nStack.can_undo() == true);
 }
 
 TEST_CASE(".swap")
 {
+    Navigation_stack<std::string> nStack_1;
+    Navigation_stack<std::string> nStack_2;
 
-    Single_list<std::string> list1;
-    Single_list<std::string> list2;
+    nStack_1.event("draw circle");
+    nStack_1.event("draw square");
+    nStack_2.event("erase square");
+    nStack_2.event("cut circle");
 
-    list1.insert("c");
-    list1.insert("a");
-    list1.insert("b");
+    std::string ele_2 = nStack_2.undo();
 
-    list2.insert("z");
-    list2.insert("x");
-    list2.insert("y");
+    nStack_2.swap(nStack_1);
 
-    CHECK_EQ(list1.front(), "a");
-    CHECK_EQ(list2.front(), "x");
+    std::string ele_1 = nStack_1.redo();
 
-    list1.swap(list2);
+    CHECK_EQ(ele_2, ele_1);
 
-    std::cout << "list1" << std::endl;
-    std::cout << list1 << std::endl;
-    std::cout << "list2" << std::endl;
-    std::cout << list2 << std::endl;
+}
 
-    CHECK_EQ(list1.front(), "x");
-    CHECK_EQ(list2.front(), "a");
+TEST_CASE("copy constructor")
+{
+    Navigation_stack<std::string> nStack_1;
+
+    nStack_1.event("draw circle");
+    nStack_1.event("draw square");
+    nStack_1.event("erase square");
+    nStack_1.event("cut circle");
+
+    nStack_1.undo();
+    nStack_1.undo();
+    Navigation_stack<std::string> nStack_2(nStack_1);
+
+    std::string ele_2 = nStack_2.redo();
+    std::string ele_1 = nStack_1.redo();
+
+    CHECK_EQ(ele_2, ele_1);
+
+    nStack_2.redo();
+
+    CHECK(nStack_2.can_redo() == false);
+    CHECK(nStack_1.can_redo() == true);
+
+    CHECK(nStack_2.can_undo() == true);
+    CHECK(nStack_1.can_undo() == true);
+
+    nStack_1.clear();
+
+    CHECK(nStack_2.can_undo() == true);
+    CHECK(nStack_1.can_undo() == false);
+
 }
