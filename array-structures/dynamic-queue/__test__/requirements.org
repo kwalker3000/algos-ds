@@ -1,0 +1,24 @@
+
+* Dynamic Queue Class Requirement
+
+** Accessors
+   + [X] Type head() const
+     - return object at head of queue. Throw exception if empty. (O(1))
+   + [X] int size() const
+     - return number of objects in queue. (O(1))
+   + [X] bool empty() const
+     - return true if queue is empty. (O(1))
+   + [X] int capacity() const
+     - returns current capacity of queue. (O(1))
+
+** Mutators
+   + [X] void swap( Dynamic_queue & )
+     - swaps member variables with those of the argument. (O(1))
+   + [X] Dynamic_queue &operator=( Dynamic_queue & )
+     - assignment operator make a copy of argument and then swaps member variables with copy
+   + [X] void enqueue( Type const & )
+     - insert argument at tail of queue. If array is full before placement, capacity of array is doubled. (O(1)) average
+   + [X] Type dequeue()
+     - removes object at head of queue. If, after removal, array capacity is (1/4) full, capacity of array is halved. Throw exception if empty. (O(1)) average
+   + [X] void clear()
+     - empties the queue, resets member variable, resize capacity to default. (O(1))
