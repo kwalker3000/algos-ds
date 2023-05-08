@@ -1,0 +1,32 @@
+
+* Linked Deque Class Requirement
+  
+** Accessors
+   + [ ] Type front() const
+     - return object at front of deque. Throw exception if empty. (O(1))
+   + [ ] int size() const
+     - return number of objects in deque. (O(1))
+   + [ ] bool empty() const
+     - return true if deque is empty. (O(1))
+   + [ ] int list_size() const
+     - returns number of nodes in linked list. (O(1))
+
+** Mutators
+   + [ ] void swap( Linked_deque & )
+     - swaps member variables with those of the argument. (O(1))
+   + [ ] Linked_deque &operator=( Linked_deque & )
+     - assignment operator make a copy of argument and then swaps member variables with copy
+   + [ ] push_front( Type const & )
+     - push argument onto the front of the deque.
+       * if deque empty, allocate new array with required capacity, push address of array onto linked list, set both indices to 0 and place new argument at that location.
+       * if front index
+
+
+
+   
+   + [X] void enqueue( Type const & )
+     - insert argument at tail of queue. If array is full before placement, capacity of array is doubled. (O(1)) average
+   + [X] Type dequeue()
+     - removes object at head of queue. If, after removal, array capacity is (1/4) full, capacity of array is halved. Throw exception if empty. (O(1)) average
+   + [X] void clear()
+     - empties the queue, resets member variable, resize capacity to default. (O(1))
