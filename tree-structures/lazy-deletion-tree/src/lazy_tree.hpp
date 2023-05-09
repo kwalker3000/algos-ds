@@ -41,8 +41,9 @@ private:
     struct tree_node* m_root;
 
     int max_height(tree_node*) const;
-    T max_extrema(tree_node* ) const;
-    T min_extrema(tree_node*) const;
+    void find_max(tree_node*, T&) const;
+    // T find_min(tree_node*) const;
+    void find_min(tree_node*, T&) const;
     bool insert_node(tree_node*&, T const&);
     void clear_tree(tree_node*);
     void in_order(tree_node*, std::vector<tree_node*>&);
@@ -118,43 +119,50 @@ T Lazy_tree<T>::front() const
     if (m_root == nullptr)
         std::invalid_argument("Invalid access to empty tree");
     else {
-        return min_extrema(m_root);
+        T min = m_root->value.first;
+        find_min(m_root, min);
+        return min;
     }
 }
 
 template <typename T>
 T Lazy_tree<T>::back() const
 {
-    if (m_root == nullptr)
+    if (m_root == nullptr) {
         std::invalid_argument("Invalid access to empty tree");
+    }
     else {
-        return max_extrema(m_root);
+        T max = m_root->value.first;
+        find_max(m_root, max);
+        return max;
     }
 }
 
 template <typename T>
-T Lazy_tree<T>::min_extrema(tree_node* node) const
+void Lazy_tree<T>::find_min(tree_node* node, T& min) const
 {
-    if (node == nullptr) return 0;
-    else if (!min_extrema(node->left)) {
-        if (node->value.second == true) {
-            return node->value.first;
+    if (node == nullptr) return;
+    else {
+        find_min(node->left, min);
+        bool is_active = node->value.second;
+        if (is_active) {
+            min = std::min(node->value.first, min);
         }
-        return min_extrema(node->right);
+        find_min(node->right, min);
     }
-    return 0;
 }
 template <typename T>
-T Lazy_tree<T>::max_extrema(tree_node* node) const
+void Lazy_tree<T>::find_max(tree_node* node, T& max) const
 {
-    if (node == nullptr) return 0;
-    else if (!max_extrema(node->right)) {
-        if (node->value.second == true) {
-            return node->value.first;
+    if (node == nullptr) return;
+    else {
+        find_max(node->right, max);
+        bool is_active = node->value.second;
+        if (is_active) {
+            max = std::max(node->value.first, max);
         }
-        return min_extrema(node->left);
+        find_max(node->left, max);
     }
-    return 0;
 }
 
 template <typename T>
