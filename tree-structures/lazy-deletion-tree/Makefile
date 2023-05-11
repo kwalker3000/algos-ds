@@ -1,6 +1,6 @@
 
 CXX = clang++
-CLFAGS = -fsanitize=address -g -Wall
+CFLAGS = -fsanitize=address -g -Wall
 
 main: main.o
 	$(CXX) $(CFLAGS) -o $@ $^

@@ -2,6 +2,7 @@
 #ifndef _Lazy_tree_h
 #define _Lazy_tree_h
 
+#include <climits>
 #include <iostream>
 #include <algorithm>
 #include <queue>
@@ -42,18 +43,21 @@ private:
 
     int max_height(tree_node*) const;
     void find_max(tree_node*, T&) const;
-    // T find_min(tree_node*) const;
     void find_min(tree_node*, T&) const;
     bool insert_node(tree_node*&, T const&);
     void clear_tree(tree_node*);
-    void in_order(tree_node*, std::vector<tree_node*>&);
+    void collect_nodes(tree_node*, std::vector<tree_node*>&);
+    tree_node* resize(std::vector<tree_node*>& tree, int left, int right);
 };
 
 template <typename T>
 Lazy_tree<T>::Lazy_tree(): m_root(nullptr), m_size(0) {}
 
 template <typename T>
-Lazy_tree<T>::~Lazy_tree() {}
+Lazy_tree<T>::~Lazy_tree()
+{
+    clear_tree(m_root);
+}
 
 template <typename T>
 bool Lazy_tree<T>::empty() const
@@ -97,13 +101,16 @@ void Lazy_tree<T>::breadth_first_traversal() const
             visit.pop();
 
             if (!visited.count(node)) {
-                std::cout << " " << node->value.first << " " << std::endl;
+                std::cout << node->value.first;
+                if (node->value.second == false) std::cout << "x ";
+                else std::cout << " ";
                 // add left node and right node
                 visited.insert(node);
                 if (node->left) visit.push(node->left);
                 if (node->right) visit.push(node->right);
             }
         }
+        std::cout << '\n';
     }
 }
 
@@ -116,8 +123,9 @@ bool Lazy_tree<T>::member(T const& node) const
 template <typename T>
 T Lazy_tree<T>::front() const
 {
-    if (m_root == nullptr)
+    if (m_root == nullptr || m_size == 0) {
         std::invalid_argument("Invalid access to empty tree");
+    }
     else {
         T min = m_root->value.first;
         find_min(m_root, min);
@@ -128,7 +136,7 @@ T Lazy_tree<T>::front() const
 template <typename T>
 T Lazy_tree<T>::back() const
 {
-    if (m_root == nullptr) {
+    if (m_root == nullptr || m_size == 0) {
         std::invalid_argument("Invalid access to empty tree");
     }
     else {
@@ -145,8 +153,13 @@ void Lazy_tree<T>::find_min(tree_node* node, T& min) const
     else {
         find_min(node->left, min);
         bool is_active = node->value.second;
+
         if (is_active) {
-            min = std::min(node->value.first, min);
+            bool active_root = m_root->value.second;
+
+            min = !active_root && min == m_root->value.first
+                  ? node->value.first
+                  : std::min(node->value.first, min);
         }
         find_min(node->right, min);
     }
@@ -159,7 +172,11 @@ void Lazy_tree<T>::find_max(tree_node* node, T& max) const
         find_max(node->right, max);
         bool is_active = node->value.second;
         if (is_active) {
-            max = std::max(node->value.first, max);
+            bool active_root = m_root->value.second;
+
+            max = !active_root && max == m_root->value.first
+                  ? node->value.first
+                  : std::max(node->value.first, max);
         }
         find_max(node->left, max);
     }
@@ -214,6 +231,7 @@ bool Lazy_tree<T>::erase(T const& key)
         if (node) {
             if (node->value.second == true) {
                 node->value.second = false;
+                --m_size;
                 return true;
             }
             else return false;
@@ -237,7 +255,6 @@ void Lazy_tree<T>::clear_tree(tree_node* node)
     else {
         clear_tree(node->left);
         clear_tree(node->right);
-        node = nullptr;
         delete node;
     }
 }
@@ -245,34 +262,47 @@ void Lazy_tree<T>::clear_tree(tree_node* node)
 template <typename T>
 void Lazy_tree<T>::clean()
 {
-    std::vector<tree_node*> tree;
-    in_order(m_root, tree);
-    for (tree_node* node : tree) {
-        std::cout << node->value.first << '\n';
-        if (node->left) {
-            std::cout << node->left->value.first << " ===== ";
+    std::vector<tree_node*> old_tree;
+    std::vector<tree_node*> new_tree;
+
+    collect_nodes(m_root, old_tree);
+
+    for (tree_node* node : old_tree) {
+        if (!node->value.second) {
+            delete node;
         }
-        if (node->right) {
-            std::cout << node->right->value.first << std::endl;
-        }
+        else new_tree.emplace_back(node);
     }
+    m_size = new_tree.size();
+    m_root = resize(new_tree, 0, new_tree.size()-1);
 }
 
 template <typename T>
-void Lazy_tree<T>::in_order(tree_node* node, std::vector<tree_node*>& tree)
+struct Lazy_tree<T>::tree_node* Lazy_tree<T>::resize(std::vector<tree_node*>& tree, int left, int right)
+{
+    if (left > right) return nullptr;
+
+    int mid = left + (right-left) / 2;
+    tree[mid]->left = resize(tree, left, mid-1);
+    tree[mid]->right = resize(tree, mid+1, right);
+
+    return tree[mid];
+}
+
+template <typename T>
+void Lazy_tree<T>::collect_nodes(tree_node* node, std::vector<tree_node*>& tree)
 {
     if (node == nullptr) return;
     else {
-        in_order(node->left, tree);
+        collect_nodes(node->left, tree);
         node->left = nullptr;
+
         tree.emplace_back(node);
-        in_order(node->right, tree);
+
+        collect_nodes(node->right, tree);
         node->right = nullptr;
     }
-
 }
 
-// template <typename T>
-// T extrema(T* node, int i) {} // if node is a struct then the only 'Type' instance should be the value of the struct
 
 #endif
