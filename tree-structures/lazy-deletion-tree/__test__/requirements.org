@@ -3,27 +3,27 @@
 * Lazy Tree Class Requirement
 
 ** Accessors
-   + [ ] bool empty() const
+   + [X] bool empty() const
      - Return true if tree is empty. (O(1))
-   + [ ] int size() const
+   + [X] int size() const
      - Returns number of nodes in tree, excluding ones tagged as erased (O(1))
-   + [ ] int height() const
+   + [X] int height() const
      - Returns the height of the tree, including nodes tagged as erased (O(1))
-   + [ ] bool member( Type const& obj ) const
+   + [X] bool member( Type const& obj ) const
      - Return true if the argument is in the tree and not tagged as erased. (O(h))
-   + [ ] Type front() const
+   + [X] Type front() const
      - Return the minimum non-erased object in the tree, should be returned as a pair (*, true). Throws exception if empty tree ( *, false ) (O(n))
-   + [ ] Type back() const
+   + [X] Type back() const
      - Return the maximum non-erased object in the tree, should be returned as a pair (*, true). Throws exception if empty tree ( *, false ) (O(n))
-   + [ ] breadth_first_traversal() const
+   + [X] breadth_first_traversal() const
      - Perform breadth-first-traversal, prints objects, adding "x " to marked ones. "3 7x 4x 9 5" (O(n))
 
 ** Mutators
-   + [ ] bool insert( Type const& )
+   + [X] bool insert( Type const& )
      - Insert new object. If object already in tree and not tagged as erased, return false. If object already in tree but tagged, untag and return true. Else create new leaf and return true. (O(h))
-   + [ ] bool erase( Type const& )
+   + [X] bool erase( Type const& )
      - Removes object from tree. If object is not already in tree, return false. If object in tree but already tagged return false. If object not tagged, tag and return true. Else return false (O(n))
-   + [ ] void clear()
+   + [X] void clear()
      - Delete all nodes in tree (O(n))
-   + [ ] void clean()
+   + [X] void clean()
      - Delete all nodes tagged as deleted in tree. (O(n))

@@ -38,8 +38,9 @@ private:
         std::pair<T, bool> value;
         tree_node *left, *right;
     };
-    int m_size;
+
     struct tree_node* m_root;
+    int m_size;
 
     int max_height(tree_node*) const;
     void find_max(tree_node*, T&) const;
@@ -102,9 +103,10 @@ void Lazy_tree<T>::breadth_first_traversal() const
 
             if (!visited.count(node)) {
                 std::cout << node->value.first;
+
                 if (node->value.second == false) std::cout << "x ";
                 else std::cout << " ";
-                // add left node and right node
+
                 visited.insert(node);
                 if (node->left) visit.push(node->left);
                 if (node->right) visit.push(node->right);
@@ -115,16 +117,24 @@ void Lazy_tree<T>::breadth_first_traversal() const
 }
 
 template <typename T>
-bool Lazy_tree<T>::member(T const& node) const
+bool Lazy_tree<T>::member(T const& key) const
 {
-
+    if (m_root == nullptr || m_size == 0) return false;
+    else {
+        tree_node* node = m_root;
+        while (node != nullptr && node->value.first != key) {
+            node = key > node->value.first ? node->right : node->left;
+        }
+        if (node && node->value.second) return true;
+        else return false;
+    }
 }
 
 template <typename T>
 T Lazy_tree<T>::front() const
 {
     if (m_root == nullptr || m_size == 0) {
-        std::invalid_argument("Invalid access to empty tree");
+        throw std::invalid_argument("Invalid access to empty tree");
     }
     else {
         T min = m_root->value.first;
@@ -137,7 +147,7 @@ template <typename T>
 T Lazy_tree<T>::back() const
 {
     if (m_root == nullptr || m_size == 0) {
-        std::invalid_argument("Invalid access to empty tree");
+        throw std::invalid_argument("Invalid access to empty tree");
     }
     else {
         T max = m_root->value.first;
@@ -225,10 +235,10 @@ bool Lazy_tree<T>::erase(T const& key)
     if (m_root == nullptr) return false;
     else {
         tree_node* node = m_root;
-        while (node->value.first != key && node != nullptr) {
+        while (node != nullptr && node->value.first != key) {
             node = key > node->value.first ? node->right : node->left;
         }
-        if (node) {
+        if (node != nullptr) {
             if (node->value.second == true) {
                 node->value.second = false;
                 --m_size;
