@@ -1,6 +1,6 @@
 
 
-* Lazy Tree Class Requirement
+* Lazy Tree Class Requirements
 
 ** Accessors
    + [X] bool empty() const

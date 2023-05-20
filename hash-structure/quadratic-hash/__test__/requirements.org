@@ -1,0 +1,26 @@
+
+
+* Quadratic Hash Table Class Requirements
+
+** Accessors
+   + [X] int size() const
+     - Returns the number of elements currently stored in the hash table. (O(1))
+   + [X] int capacity() const
+     - Returns the number of bins in the hash table. (O(1))
+   + [X] double load_factor() const
+     - Returns the load factor of hash table. (O(1))
+   + [X] bool empty() const
+     - Returns true if hash table is empty. (O(1))
+   + [X] bool member( Type const & ) const
+     - Returns true if object is in the hash table. (O(1))
+   + [X] Type bin( int n ) const
+     - Return the entry in bin /n/. ~Does not check undefined lookups~
+   + [X] void print() const
+
+** Mutators
+   + [X] void insert( Type const & )
+     - Insert argument into hash table, determined by hash function. If table is full, throw overflow exception. If argument already in table do nothing.
+   + [X] bool erase( Type const & )
+     - If argument exists in table, delete and return true, otherwise return false.
+   + [X] void clear()
+     - Removes all elements from bins. (O(m))
